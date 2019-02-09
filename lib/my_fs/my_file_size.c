@@ -5,7 +5,7 @@
 ** return lengh of an file
 */
 
-#include "my.h"
+#include "my_file.h"
 
 int my_file_size(char const *filepath)
 {

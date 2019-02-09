@@ -22,8 +22,6 @@
 ** O_CREATE -> CREE UN NOUVEAU FICHIER, ECHOUE SI IL EXISTE DEJA
 */
 
-#include <stdio.h>
-
 typedef int open_mode_t;
 typedef int fd_t;
 

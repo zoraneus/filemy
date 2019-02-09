@@ -5,7 +5,7 @@
 ** read an entire file and put it in an str
 */
 
-#include "my.h"
+#include "my_file.h"
 
 char *my_file_readall(char const *filepath, my_err_t *err)
 {
