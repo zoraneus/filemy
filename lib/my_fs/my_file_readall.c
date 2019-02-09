@@ -7,18 +7,21 @@
 
 #include "my_file.h"
 
-char *my_file_readall(char const *filepath, my_err_t *err)
+char *my_file_readall(char const *filepath)
 {
     int size = my_file_size(filepath);
     char *buffer = malloc(sizeof(char) * (size + 1));
-
     fd_t fd = my_open(filepath, O_RDONLY);
-    if (fd == -1){
-        *err = ERR_FS;
-        return "\0";
+
+    if (fd == -1) {
+        free(buffer);
+        return (0);
     }
     int size_read = read(fd, buffer, size);
-    *err = (size_read == size) ? MY_OK : ERR_SIZEREAD;
+    if (size_read != size) {
+        free(buffer);
+        return (0);
+    }
     buffer[size] = '\0';
-    return buffer;
+    return (buffer);
 }

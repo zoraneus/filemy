@@ -12,5 +12,5 @@ int my_file_size(char const *filepath)
     struct stat stat_s;
 
     stat(filepath, &stat_s);
-    return stat_s.st_size;
+    return (stat_s.st_size);
 }

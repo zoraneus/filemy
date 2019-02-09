@@ -22,16 +22,12 @@
 ** O_CREATE -> CREE UN NOUVEAU FICHIER, ECHOUE SI IL EXISTE DEJA
 */
 
-typedef int open_mode_t;
 typedef int fd_t;
-
-//open functions
-fd_t my_open(char const *filepath, open_mode_t mode);
 
 //stats
 int my_file_size(char const *filepath);
 
 //read functions
-char *my_file_readall(char const *filepath, my_err_t *err);
+char *my_file_readall(char const *filepath); //return 0 if err
 
 #endif /* !MY_FS_H_ */
