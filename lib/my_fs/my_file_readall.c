@@ -13,12 +13,7 @@ char *my_file_readall(char const *filepath)
     char *buffer = malloc(sizeof(char) * (size + 1));
     fd_t fd = my_open(filepath, O_RDONLY);
 
-    if (fd == -1) {
-        free(buffer);
-        return (0);
-    }
-    int size_read = read(fd, buffer, size);
-    if (size_read != size) {
+    if (fd == -1 || read(fd, buffer, size) != size) {
         free(buffer);
         return (0);
     }
