@@ -33,11 +33,14 @@ SRC_PATH	=	./
 INCLUDE_PATH	=	../include
 
 SRC	=	my_file/my_file_readall.c \
-		my_file/my_file_size.c
+		my_file/my_file_size.c \
+		my_rights/common_rights.c \
+		my_rights/exec_rights.c \
+		my_rights/read_rights.c \
+		my_rights/write_rights.c 
 
 CFLAGS	=	-Wall \
 			-Wextra \
-			-Werror \
 			-I $(INCLUDE_PATH)
 
 DEBUG_FLAGS	=	-g3 -gdwarf-4
