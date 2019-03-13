@@ -33,5 +33,21 @@ int *rights_get(char const *path)
     array[OR] = right_grp_read(path);
     array[OW] = right_grp_write(path);
     array[OX] = right_grp_exec(path);
+    if (array[UR] == ERR) {
+        free(array);
+        return (ERR);
+    }
     return (array);
+}
+
+int is_directory(char const *path)
+{
+    struct stat stat_s;
+
+    if (stat(path, &stat_s) == -1)
+        return (-1);
+    int type = stat_s.st_mode & 110000000000000;
+    if (type == 16384)
+        return (TRUE);
+    return (FALSE);
 }

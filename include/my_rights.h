@@ -27,6 +27,12 @@ enum {UR, UW, UX, GR, GW, GX, OR, OW, OX, D};
 // rights (common)
 int apply_right_mask(char const *path, int mask); //0 false, 1 true, -1 err
 int *rights_get(char const *path); //size 9
+int is_directory(char const *path);
+
+// rights checker
+int right_read(char const *path);
+int right_write(char const *path);
+int right_exec(char const *path);
 
 // read
 int right_usr_read(char const *path);
