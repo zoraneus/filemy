@@ -27,7 +27,7 @@ int *rights_get(char const *path)
     array[UR] = right_usr_read(path);
     array[UW] = right_usr_write(path);
     array[UX] = right_usr_exec(path);
-    array[GR] = right_grp_read(path),
+    array[GR] = right_grp_read(path);
     array[GW] = right_grp_write(path);
     array[GX] = right_grp_exec(path);
     array[OR] = right_grp_read(path);
@@ -35,7 +35,7 @@ int *rights_get(char const *path)
     array[OX] = right_grp_exec(path);
     if (array[UR] == ERR) {
         free(array);
-        return (ERR);
+        return (NULL);
     }
     return (array);
 }
@@ -43,10 +43,11 @@ int *rights_get(char const *path)
 int is_directory(char const *path)
 {
     struct stat stat_s;
+    int type;
 
     if (stat(path, &stat_s) == -1)
         return (-1);
-    int type = stat_s.st_mode & 110000000000000;
+    type = stat_s.st_mode & 110000000000000;
     if (type == 16384)
         return (TRUE);
     return (FALSE);
