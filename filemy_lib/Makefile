@@ -29,24 +29,36 @@ LINE_RETURN	=	$(ECHO) ""
 NAME	        =	filemy
 COLOR_THEME		=	$(YELLO_C)
 DEBUG_THEME     =	$(CYAN_C)
-SRC_PATH		=	./
 INCLUDE_PATH	=	../include
 
-SRC		=	my_file/my_file_readall.c \
-			my_file/my_file_size.c \
-			my_rights/exec_rights.c \
-			my_rights/read_rights.c \
-			my_rights/write_rights.c
+SRC			=	my_file/my_file_readall.c \
+				my_file/my_file_size.c \
+				my_rights/exec_rights.c \
+				my_rights/read_rights.c \
+				my_rights/write_rights.c \
+				my_rights/common_rights.c \
+				my_rights/right_checker.c
 
-CFLAGS	=	-Wall \
-			-Wextra \
-			-I $(INCLUDE_PATH)
+TEST_SRC	=	tests/test_my_right_read.c \
+				tests/test_my_right_write.c \
+				tests/test_my_right_exec.c \
+				tests/test_is_directory.c \
+				tests/test_file_readall.c \
+				tests/test_file_size.c
 
+CFLAGS		=	-Wall \
+				-Wextra \
+				-I $(INCLUDE_PATH)
+TEST_FLAGS 	=	-lcriterion \
+				-L . -l $(NAME) \
+				$(CFLAGS)
 DEBUG_FLAGS	=	-g3 -gdwarf-4
 
-SRCS	=	$(SRC:%=$(SRC_PATH)/%)
+SRCS		=	$(SRC:%=%)
+TEST_SRCS	=	$(TEST_SRC:%=%)
 
-OBJ	=	$(SRCS:.c=.o)
+OBJ			=	$(SRCS:.c=.o)
+TEST_OBJ 	=	$(TEST_SRCS:.c=.o)
 
 all:	message $(NAME)
 
@@ -62,14 +74,15 @@ message:
 
 $(NAME):	$(OBJ)
 	@ar rc ./lib$(NAME).a $(OBJ) && \
-		$(ECHO) $(BOLD_T)$(GREEN_C)"\n[✔] COMPILED:" $(DEFAULT)$(LIGHT_GREEN) "lib$(NAME).a" $(DEFAULT) || \
-		$(ECHO) $(RED_C)$(BOLD_T)"[✘] "$(UNDLN_T)"BUILD FAILED:" $(LIGHT_RED) "lib$(NAME).a"$(DEFAULT)
+		$(ECHO) $(BOLD_T)$(GREEN_C)"\n[✔] COMPILED:" $(DEFAULT)$(LIGHT_GREEN) "lib$(NAME).a" $(DEFAULT) "\n" || \
+		$(ECHO) $(RED_C)$(BOLD_T)"[✘] "$(UNDLN_T)"BUILD FAILED:" $(LIGHT_RED) "lib$(NAME).a"$(DEFAULT) "\n"
 
 clean:
 	@$(RM) $(OBJ)
 	@$(ECHO) $(RED_C)$(DIM_T)"[clean]  "$(DEFAULT) \
 		$(RED_C)$(BOLD_T)"DELETED: "$(DEFAULT) \
 		$(LIGHT_RED)"lib$(NAME)'s object files"$(DEFAULT)
+
 
 fclean:	clean
 	@$(RM) ./lib$(NAME).a
@@ -83,9 +96,27 @@ debug: CFLAGS += $(DEBUG_FLAGS)
 debug: COLOR_THEME = $(DEBUG_THEME)
 debug: fclean all
 
+test_build:	fclean test_clean all $(TEST_OBJ)
+	@$(CC) -o test_run $(TEST_OBJ) $(TEST_FLAGS) && \
+		$(ECHO) $(BOLD_T)$(GREEN_C)"\n[✔] TEST COMPILATION SUCCESSFUL\n" $(DEFAULT) || \
+		$(ECHO) $(RED_C)$(BOLD_T)"\n[✘] "$(UNDLN_T)"TEST COMPILATION FAILED" $(DEFAULT) "\n"
+
+test_exec:
+	@$(ECHO) -n $(BOLD_T)$(LIGHT_GREEN) "   Test lib" $(NAME) ": " $(DEFAULT)
+	@./test_run --always-succeed
+
+test_clean:
+	@$(RM) $(TEST_OBJ)
+	@$(RM) ./test_run
+	@$(ECHO) $(RED_C)$(DIM_T)"[clean]  "$(DEFAULT) \
+		$(RED_C)$(BOLD_T)"DELETED: "$(DEFAULT) \
+		$(LIGHT_RED)"tests object files"$(DEFAULT)
+
+test_run: test_build test_exec
+
 %.o: %.c
 	@$(CC) -c $(CFLAGS) -o $@ $< && \
 		$(ECHO) $(DIM_T) "cc $(CFLAGS) -c "$<$(COLOR_THEME)$(BOLD_T)" -o "$@ $(DEFAULT) || \
 		$(ECHO) "\n"$(MAGEN_C) $(UNDLN_T)$(BOLD_T)"cc $(CFLAGS) -c "$<" -o "$@$(DEFAULT)"\n"
 
-.PHONY: all $(NAME) message clean fclean re debug
+.PHONY: all $(NAME) message clean fclean re debug test_build test_clean test_run

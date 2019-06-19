@@ -13,8 +13,9 @@ char *my_file_readall(char const *filepath)
     char *buffer = malloc(sizeof(char) * (size + 1));
     fd_t fd = open(filepath, O_RDONLY);
 
-    if (fd == -1 || read(fd, buffer, size) != size) {
-        free(buffer);
+    if (!buffer || fd == -1 || read(fd, buffer, size) != size) {
+        if (buffer)
+            free(buffer);
         close(fd);
         return (0);
     }

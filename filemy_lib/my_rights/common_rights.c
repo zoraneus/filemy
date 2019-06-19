@@ -7,23 +7,25 @@
 
 #include "my_rights.h"
 
-int apply_right_mask(char const *path, int mask)
+bool apply_right_mask(char const *path, int mask)
 {
     struct stat stat_s;
     mode_t mode;
 
     if (stat(path, &stat_s) == -1)
-        return (-1);
+        return (false);
     mode = stat_s.st_mode;
     if ((mode & mask) == 0)
-        return (FALSE);
-    return (TRUE);
+        return (false);
+    return (true);
 }
 
-int *rights_get(char const *path)
+bool *rights_get(char const *path)
 {
-    int *array = malloc(sizeof(int) * 9);
+    bool *array = malloc(sizeof(bool) * 9);
 
+    if (!array)
+        return (NULL);
     array[UR] = right_usr_read(path);
     array[UW] = right_usr_write(path);
     array[UX] = right_usr_exec(path);
@@ -33,14 +35,10 @@ int *rights_get(char const *path)
     array[OR] = right_grp_read(path);
     array[OW] = right_grp_write(path);
     array[OX] = right_grp_exec(path);
-    if (array[UR] == ERR) {
-        free(array);
-        return (NULL);
-    }
     return (array);
 }
 
-int is_directory(char const *path)
+bool is_directory(char const *path)
 {
     struct stat stat_s;
     int type;
@@ -49,6 +47,6 @@ int is_directory(char const *path)
         return (-1);
     type = stat_s.st_mode & 110000000000000;
     if (type == 16384)
-        return (TRUE);
-    return (FALSE);
+        return (true);
+    return (false);
 }

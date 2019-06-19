@@ -7,41 +7,41 @@
 
 #include "my_rights.h"
 
-int right_read(char const *path)
+bool right_read(char const *path)
 {
-    int result;
-    int *rights = rights_get(path);
+    bool result;
+    bool *rights = rights_get(path);
 
-    if (rights == ERR)
-        return (ERR);
+    if (rights == false)
+        return (false);
     result = rights[UR] + rights[GR] + rights[OR];
     if (result > 0)
-        return (TRUE);
-    return (FALSE);
+        return (true);
+    return (false);
 }
 
-int right_write(char const *path)
+bool right_write(char const *path)
 {
-    int result;
-    int *rights = rights_get(path);
+    bool result;
+    bool *rights = rights_get(path);
 
-    if (rights == ERR)
-        return (ERR);
+    if (rights == false)
+        return (false);
     result = rights[UW] + rights[GW] + rights[OW];
     if (result > 0)
-        return (TRUE);
-    return (FALSE);
+        return (true);
+    return (false);
 }
 
-int right_exec(char const *path)
+bool right_exec(char const *path)
 {
-    int result;
-    int *rights = rights_get(path);
+    bool result;
+    bool *rights = rights_get(path);
 
-    if (rights == ERR)
-        return (ERR);
+    if (rights == false)
+        return (false);
     result = rights[UX] + rights[GX] + rights[OX];
     if (result > 0)
-        return (TRUE);
-    return (FALSE);
+        return (true);
+    return (false);
 }
